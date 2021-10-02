@@ -1,3 +1,7 @@
 
 # API Keys
 **/key.py
+
+# Virtual Environment
+.env/
+**/__pycache__/
