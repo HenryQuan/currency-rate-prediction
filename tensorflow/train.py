@@ -50,16 +50,27 @@ model.summary()
 
 # %%
 model.compile(
-    optimizer=tf.optimizers.Adam(),
-    loss='mse',
-    metrics=[tf.keras.metrics.MeanSquaredError()])
+    optimizer=tf.optimizers.Adam(learning_rate=0.0001),
+    loss='mse')
 
-# %%
 history = model.fit(
     train_x,
     train_y,
-    epochs=100
+    epochs=200
 )
+
+# plot the training history
+print(history.history.keys())
+loss_values = history.history['loss']
+epochs = range(1, len(loss_values)+1)
+
+
+# plot training loss and accuracy
+plt.plot(epochs, loss_values, label='Training Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.show()
 
 # %%
 # Predict since day one
