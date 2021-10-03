@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
+from tensorflow.keras.layers.experimental import preprocessing
 import pandas as pd
 import numpy as np
 import os
@@ -38,26 +39,50 @@ plt.show()
 
 # %%
 # Define the model
+normalizer = preprocessing.Normalization(input_shape=[1, ], axis=None)
+normalizer.adapt(train_x)
 model = keras.Sequential([
-    layers.Dense(units=1)
+    layers.Dense(64, activation='relu', input_shape=[1, ]),
+    layers.Dense(64, activation='relu'),
+    layers.Dense(1)
 ])
 model.summary()
 
 # %%
 model.compile(
     optimizer=tf.optimizers.Adam(),
-    loss='mean_absolute_error')
+    loss='mse',
+    metrics=[tf.keras.metrics.MeanSquaredError()])
 
 # %%
 history = model.fit(
-    all_days,
-    all_rates,
+    train_x,
+    train_y,
     epochs=100
 )
 
 # %%
+# Predict since day one
+prediction = model.predict(train_x)
+plt.plot(train_x, prediction, label='Predicted Exchange Rates')
+plt.xlabel('Days')
+plt.ylabel('Rates')
+plt.plot(train_x, train_y, label='Exchange Rates')
+plt.xlabel('Days')
+plt.ylabel('Rates')
+plt.legend()
+plt.show()
+
 # Predict rates in a year
+predict_days = []
 for i in range(365):
     day = total_count + i
-    print('Day {} ({}): {}'.format(day, i + 1, model.predict(day)))
+    predict_days.append(day)
+prediction = model.predict(predict_days)
+plt.plot(predict_days, prediction, label='Future Exchange Rates')
+plt.xlabel('Days')
+plt.ylabel('Rates')
+plt.legend()
+plt.show()
+
 # %%
