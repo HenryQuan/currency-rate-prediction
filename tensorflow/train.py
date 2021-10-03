@@ -19,6 +19,7 @@ csv_path = '../data/{}'.format(csv_name)
 if not os.path.exists(csv_path):
     exit('File not found: {}'.format(csv_path))
 
+# Starting date is around 2011-02-10
 full_data = pd.read_csv(csv_path)
 total_count = full_data.shape[0]
 train_x = full_data["Day"]
@@ -42,7 +43,8 @@ plt.show()
 normalizer = preprocessing.Normalization(input_shape=[1, ], axis=None)
 normalizer.adapt(train_x)
 model = keras.Sequential([
-    layers.Dense(64, activation='relu', input_shape=[1, ]),
+    normalizer,
+    layers.Dense(64, activation='relu'),
     layers.Dense(64, activation='relu'),
     layers.Dense(1)
 ])
@@ -50,13 +52,13 @@ model.summary()
 
 # %%
 model.compile(
-    optimizer=tf.optimizers.Adam(learning_rate=0.0001),
+    optimizer=tf.optimizers.Adam(learning_rate=0.00001),
     loss='mse')
 
 history = model.fit(
     train_x,
     train_y,
-    epochs=200
+    epochs=1000
 )
 
 # plot the training history
