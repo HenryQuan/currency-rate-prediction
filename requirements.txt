@@ -1,2 +1,7 @@
 requests
 autopep8
+tensorflow
+pandas
+numpy
+matplotlib
+ipykernel

@@ -3,10 +3,15 @@ Convert raw json data to csv for learning
 """
 
 import json
+import os
 
-IO_NAME = 'AUD2JPY'
+IO_NAME = 'AUD2CNY'
 if __name__ == '__main__':
-    with open('../raw/{}.json'.format(IO_NAME), 'r') as raw_data:
+    file_path = '../raw/{}.json'.format(IO_NAME)
+    if not os.path.exists(file_path):
+        exit('File not found: {}'.format(file_path)v)
+
+    with open(file_path, 'r') as raw_data:
         data = json.load(raw_data)
         ten_years = data['batchList'][0]
         rates = ten_years['rates'][1:]
